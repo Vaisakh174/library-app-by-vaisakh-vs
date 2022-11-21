@@ -19,7 +19,7 @@ require("./middleware/mongodb.js");
 
 // for hosting to herokku
 const path = require('path');
-app.use(express.static(path.join(__dirname + "/dist/blog-case_study-2")));
+app.use(express.static(path.join(__dirname + "/dist/frontend")));
 // app.use(express.static("/dist/blog-case_study-2"));
 
 
@@ -30,7 +30,7 @@ app.use("/api", api);
 
 // for heroku
 app.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname + '/dist/blog-case_study-2/index.html'));
+    res.sendFile(path.join(__dirname + '/dist/frontend/index.html'));
 });
 
 // set port 

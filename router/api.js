@@ -1,14 +1,16 @@
 
 const express = require("express");
 const router = express.Router();
-const DATA = require("../models/blogdata")
+const DATA = require("../models/libraryData");
+const userDATA = require("../models/libraryUsers");
 
-//get all list (get)
-router.get('/getall', async (req, res) => {
+
+//get all list (get) for users
+router.get('/getall/user', async (req, res) => {
 
     try {
-        let list = await DATA.find();
-        
+        let list = await userDATA.find();
+
         console.log(`from get method ${list}`);
         res.send(list);
     }
@@ -20,19 +22,66 @@ router.get('/getall', async (req, res) => {
 });
 
 
-// // fetch single student (get)
-// router.get('/getsingle', async (req, res) => {
+//add data (post) for users
+router.post('/post/user', async (req, res) => {
 
-//     try {
-//         let id = req.params.id;
-//         const singlestudent = await DATA.findById(id);
-//         console.log(`from get with id method ${singlestudent}`);
-//         res.send(singlestudent)
-//     } catch (error) {
-//         console.log(`error from get method ${error}`);
-//     }
+    try {
+        let item = {
 
-// });
+            bookname: req.body.bookname,
+            bookimgaddress: req.body.bookimgaddress,
+            author: req.body.author,
+            content: req.body.content
+        }
+        const newdata = new userDATA(item);
+        const savedata = await newdata.save();
+        console.log(`from post method ${savedata}`);
+        res.send(savedata);
+
+    } catch (error) {
+        console.log(`error from get method ${error}`);
+    }
+
+});
+
+
+
+
+
+
+
+
+
+//get all list (get) for data
+router.get('/getall', async (req, res) => {
+
+    try {
+        let list = await DATA.find();
+
+        console.log(`from get method ${list}`);
+        res.send(list);
+    }
+    catch (error) {
+        console.log(`error from get method ${error}`);
+
+    }
+
+});
+
+
+// fetch single data (get)
+router.get('/getsingle', async (req, res) => {
+
+    try {
+        let id = req.params.id;
+        const singledata = await DATA.findById(id);
+        console.log(`from get with id method ${singledata}`);
+        res.send(singledata)
+    } catch (error) {
+        console.log(`error from get method ${error}`);
+    }
+
+});
 
 
 
@@ -41,24 +90,12 @@ router.post('/post', async (req, res) => {
 
     try {
         let item = {
-                        blogerName: req.body.blogerName,
-                        blogerImg: req.body.blogerImg,
-                        followCount: req.body.followCount,
-                        articleTitle: req.body.articleTitle,
-                        articleDate: req.body.articleDate,
-                        comment: req.body.comment,
-                        user: req.body.user,
-                        content1: req.body.content1,
-                        content2: req.body.content2,
-                        content3: req.body.content3,
-                        content4: req.body.content4,
-                        content5: req.body.content5,
-                        content6: req.body.content6,
-                        content7: req.body.content7,
-                        content8: req.body.content8,
-                        content9: req.body.content9,
-                        content10: req.body.content10
-                    }
+
+            bookname: req.body.bookname,
+            bookimgaddress: req.body.bookimgaddress,
+            author: req.body.author,
+            content: req.body.content
+        }
         const newdata = new DATA(item);
         const savedata = await newdata.save();
         console.log(`from post method ${savedata}`);
@@ -71,20 +108,20 @@ router.post('/post', async (req, res) => {
 });
 
 
-// // delete student
-// router.delete('/delete/:id', async (req, res) => {
+// delete data
+router.delete('/delete/:id', async (req, res) => {
 
-//     try {
-//         let id = req.params.id;
-//         let deletestudent = await DATA.findByIdAndDelete(id);
-//         console.log(`from delete method ${deletestudent}`);
-//         res.send(deletestudent);
+    try {
+        let id = req.params.id;
+        let deletedata = await DATA.findByIdAndDelete(id);
+        console.log(`from delete method ${deletedata}`);
+        res.send(deletedata);
 
-//     } catch (error) {
-//         console.log(`error from get method ${error}`);
-//     }
+    } catch (error) {
+        console.log(`error from get method ${error}`);
+    }
 
-// });
+});
 
 
 
@@ -95,15 +132,17 @@ router.put('/update', async (req, res) => {
     try {
         let id = req.body._id;
         let item = {
-            // comment: req.body.comment,
-            followCount:req.body.followCount
+            bookname: req.body.bookname,
+            bookimgaddress: req.body.bookimgaddress,
+            author: req.body.author,
+            content: req.body.content
         }
-        console.log("incoming data from update",this.id,this.item);
+        console.log("incoming data from update", this.id, this.item);
 
         let updatedata = await DATA.findByIdAndUpdate(
             { "_id": id },
             { $set: item }
-        );  
+        );
         console.log(`from put method old data ${updatedata}`);
         res.send(updatedata);
 
