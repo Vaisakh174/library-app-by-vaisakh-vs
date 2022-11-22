@@ -70,7 +70,7 @@ router.get('/getall', async (req, res) => {
 
 
 // fetch single data (get)
-router.get('/getsingle', async (req, res) => {
+router.get('/getsingle/:id', async (req, res) => {
 
     try {
         let id = req.params.id;
