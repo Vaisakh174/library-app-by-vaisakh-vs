@@ -131,13 +131,13 @@ router.put('/update', async (req, res) => {
 
     try {
         let id = req.body._id;
-        let item = {
-            bookname: req.body.bookname,
-            bookimgaddress: req.body.bookimgaddress,
-            author: req.body.author,
-            content: req.body.content
+        let item = { //remove 'data' from below if we not pass data object from frontend
+            bookname: req.body.data.bookname,
+            bookimgaddress: req.body.data.bookimgaddress,
+            author: req.body.data.author,
+            content: req.body.data.content
         }
-        console.log("incoming data from update", this.id, this.item);
+        console.log("incoming data from update", item);
 
         let updatedata = await DATA.findByIdAndUpdate(
             { "_id": id },
