@@ -3,52 +3,28 @@ const express = require("express");
 const router = express.Router();
 const DATA = require("../models/libraryData");
 const userDATA = require("../models/libraryUsers");
+const jwt = require('jsonwebtoken')
 
 
-//get all list (get) for users
-router.get('/getall/user', async (req, res) => {
 
-    try {
-        let list = await userDATA.find();
+function verifytoken(req, res, next) {
 
-        console.log(`from get method ${list}`);
-        res.send(list);
+    if (!req.headers.autherization) {
+        return res.status(401).send('Unautherized request1');
     }
-    catch (error) {
-        console.log(`error from get method ${error}`);
-
+    let token = req.headers.autherization.split(''[1])
+    if (token == 'null') {
+        return res.status(401).send('Unautherized request2');
     }
-
-});
-
-
-//add data (post) for users
-router.post('/post/user', async (req, res) => {
-
-    try {
-        let item = {
-
-            bookname: req.body.bookname,
-            bookimgaddress: req.body.bookimgaddress,
-            author: req.body.author,
-            content: req.body.content
-        }
-        const newdata = new userDATA(item);
-        const savedata = await newdata.save();
-        console.log(`from post method ${savedata}`);
-        res.send(savedata);
-
-    } catch (error) {
-        console.log(`error from get method ${error}`);
+    let payload = jwt.verify(token, 'secretkey');
+    console.log("payload=", payload);
+    if (!payload) {
+        return res.status(401).send('Unautherized request3');
     }
+    req.userid = payload.subject;
+    next();
 
-});
-
-
-
-
-
-
+}
 
 
 
@@ -151,6 +127,112 @@ router.put('/update', async (req, res) => {
     }
 
 });
+
+
+
+
+//auth
+
+
+// //get all list (get) for users
+// router.get('/getall/user', async (req, res) => {
+
+//     try {
+//         let list = await userDATA.find();
+
+//         console.log(`from get method ${list}`);
+//         res.send(list);
+//     }
+//     catch (error) {
+//         console.log(`error from get method ${error}`);
+
+//     }
+
+// });
+
+
+
+//add data (post) for users
+router.post('/post/user', async (req, res) => {
+
+    try {
+        let item = {
+
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password
+
+        }
+        const newdata = new userDATA(item);
+        const savedata = await newdata.save();
+        console.log(`from post method, submit ${savedata}`);
+        res.send(savedata);
+
+    } catch (error) {
+        console.log(`error from post, submit method ${error}`);
+    }
+
+});
+
+
+
+//auth
+
+// let email = "vaishakh174@gmail.com"
+// let password = "12345"
+
+router.post("/login", async (req, res) => {
+    let emailf = req.body.email;
+    let passwordf = req.body.password;
+    console.log(emailf, passwordf);
+
+    try {
+
+        userDATA.findOne({ email: emailf }, (err, foundResults) => {
+
+            
+
+            console.log("error 400", foundResults, err)
+
+
+            if (foundResults == null) {
+                console.log("error 401 invalid email")
+
+                 res.status(401).send("invalid email");
+            }
+
+
+
+
+            else if (foundResults.password != passwordf) {
+                console.log("error 401 invalid password")
+                
+                 res.status(401).send("invalid password");
+               
+            } 
+
+            else
+           
+            {
+                console.log("success login with jwt")
+                let payload = { subject: emailf + passwordf }
+                let token = jwt.sign(payload, "secretkey");
+                res.status(200).send({ token });
+            }
+
+        })
+
+    } catch (error) {
+        console.log("error try login ", error)
+
+
+    }
+
+
+
+
+});
+
 
 
 
