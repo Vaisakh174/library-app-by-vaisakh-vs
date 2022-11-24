@@ -7,21 +7,23 @@ const jwt = require('jsonwebtoken')
 
 
 
-function verifytoken(req, res, next) {
-
-    if (!req.headers.autherization) {
-        return res.status(401).send('Unautherized request1');
+function verifytoken (req, res, next) {
+    console.log('headers', req.headers.authorization);
+    if (!req.headers.authorization) {
+        return res.status(401).send('Unautherized request');
     }
-    let token = req.headers.autherization.split(''[1])
+    let token = req.headers.authorization.split(' ')[1];
     if (token == 'null') {
-        return res.status(401).send('Unautherized request2');
+        return res.status(401).send('Unautherized request');
     }
-    let payload = jwt.verify(token, 'secretkey');
+    let payload = jwt. verify(token , 'secretkey');
     console.log("payload=", payload);
     if (!payload) {
-        return res.status(401).send('Unautherized request3');
+        return res.status(401).send('Unautherized request');
     }
-    req.userid = payload.subject;
+    console.log("payload.subject=", payload.subject);
+
+    req.userId = payload.subject;
     next();
 
 }
@@ -62,7 +64,7 @@ router.get('/getsingle/:id', async (req, res) => {
 
 
 //add data (post)
-router.post('/post', async (req, res) => {
+router.post('/post', verifytoken , async (req, res) => {
 
     try {
         let item = {
@@ -85,7 +87,7 @@ router.post('/post', async (req, res) => {
 
 
 // delete data
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -103,7 +105,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 
 // update data
-router.put('/update', async (req, res) => {
+router.put('/update',verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
@@ -131,26 +133,7 @@ router.put('/update', async (req, res) => {
 
 
 
-//auth
-
-
-// //get all list (get) for users
-// router.get('/getall/user', async (req, res) => {
-
-//     try {
-//         let list = await userDATA.find();
-
-//         console.log(`from get method ${list}`);
-//         res.send(list);
-//     }
-//     catch (error) {
-//         console.log(`error from get method ${error}`);
-
-//     }
-
-// });
-
-
+//auth user
 
 //add data (post) for users
 router.post('/signup', async (req, res) => {
