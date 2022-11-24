@@ -190,6 +190,7 @@ router.post('/signup', async (req, res) => {
 // let password = "12345"
 
 router.post("/login", async (req, res) => {
+    
     let emailf = req.body.email;
     let passwordf = req.body.password;
     console.log(emailf, passwordf);
@@ -214,10 +215,11 @@ router.post("/login", async (req, res) => {
             }
 
             else {
-                console.log("success login with jwt")
+                console.log("success login with jwt user",foundResults.name)
                 let payload = { subject: emailf + passwordf }
                 let token = jwt.sign(payload, "secretkey");
-                res.status(200).send({ token });
+                let USER=foundResults.name;
+                res.status(200).send({ token ,USER});
             }
         })
 
