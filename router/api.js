@@ -153,7 +153,7 @@ router.put('/update', async (req, res) => {
 
 
 //add data (post) for users
-router.post('/post/user', async (req, res) => {
+router.post('/signup', async (req, res) => {
     let item = {
 
         name: req.body.name,
