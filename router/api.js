@@ -198,7 +198,7 @@ router.post("/login", async (req, res) => {
             if (foundResults == null) {
                 console.log("error 401 invalid email")
 
-                 res.status(401).send("invalid email");
+                 res.status(401).send("invalid email or password");
             }
 
 
@@ -210,6 +210,7 @@ router.post("/login", async (req, res) => {
                  res.status(401).send("invalid password");
                
             } 
+             
 
             else
            
