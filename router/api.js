@@ -146,7 +146,7 @@ router.post('/signup', async (req, res) => {
     }
 
 
-    userDATA.findOne({ email: item.email }, async (err, foundResults) => {
+     userDATA.findOne({ email: item.email }, async (err, foundResults) => {
 
         console.log("data from signup body", foundResults, err)
         
@@ -197,7 +197,7 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        userDATA.findOne({ email: emailf }, (err, foundResults) => {
+        await userDATA.findOne({ email: emailf }, (err, foundResults) => {
 
             console.log("error 400", foundResults, err)
 
